@@ -76,13 +76,15 @@ def cat_html(url, page, maxPage):
 
 ## 保存文章
 def save_html(content, title, page):
+    # 文件名称转义 特殊符号
+    title=str(title).replace("","")
     path = 'E:\\糗百text\\糗事百科第{}页'.format(page)
     if not os.path.exists(path):
         os.mkdir(path)
     print("开始下载糗事百科:{}".format(title))
 
     for i in content:
-        with open('{}\{}.txt'.format(path, title), 'a', encoding='utf-8') as f:
+        with open(r'{}\{}.txt'.format(path, title), 'a', encoding='utf-8') as f:
             f.write(i)
 
 
@@ -93,14 +95,19 @@ if __name__ == '__main__':
     # 获取出糗百的总页数
     maxPage = getMaxPage(urlList[0])
 
-    ## 首页单独查看下载
-    cat_html(urlList[0], 1, maxPage)
+    # ## 首页单独查看下载
+    # cat_html(urlList[0], 1, maxPage)
+    #
+    # ## 遍历查看文章下载
+    # for i in range(1, maxPage + 1):
+    #     url = "http://www.lovehhy.net/Joke/Detail/QSBK/{}".format(i)
+    #     urlList.append(url)
+    #     cat_html(urlList[i], i + 1, maxPage)
 
-    ## 遍历查看文章下载
-    for i in range(1, maxPage + 1):
-        url = "http://www.lovehhy.net/Joke/Detail/QSBK/{}".format(i)
-        urlList.append(url)
-        cat_html(urlList[i], i + 1, maxPage)
+    cat_html("http://www.lovehhy.net/Joke/Detail/QSBK/{}".format(57), 57, maxPage)
+    cat_html("http://www.lovehhy.net/Joke/Detail/QSBK/{}".format(58), 58, maxPage)
+    cat_html("http://www.lovehhy.net/Joke/Detail/QSBK/{}".format(59), 59, maxPage)
+
 
     end_time = time()
     run_time = end_time - begin_time
