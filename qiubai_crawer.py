@@ -74,8 +74,6 @@ def cat_html(url, page, maxPage):
 
 ## 保存文章
 def save_html(content, title, page):
-    # 文件名称转义  emjoy
-    title = str(title).replace("", "")
     # 转义特殊符号
     title = "".join(re.findall('[\u4e00-\u9fa5a-zA-Z0-9]+', title, re.S))
     path = 'E:\\糗百text\\糗事百科第{}页'.format(page)
@@ -99,7 +97,7 @@ if __name__ == '__main__':
     cat_html(urlList[0], 1, maxPage)
 
     ## 遍历查看文章下载
-    for i in range(1, maxPage + 1):
+    for i in range(1, maxPage+1):
         url = "http://www.lovehhy.net/Joke/Detail/QSBK/{}".format(i)
         urlList.append(url)
         cat_html(urlList[i], i + 1, maxPage)
