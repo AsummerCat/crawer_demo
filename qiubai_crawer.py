@@ -43,7 +43,7 @@ def getMaxPage(url):
 
 # 查看文章
 def cat_html(url, page, maxPage):
-    output = """第{}页   文章名称: 糗事百科:   [{}]  \n   点击数：{} \n文章内容\n{}\n========================================\n"""  # 最终输出格式
+    output = """第{}页   文章名称: 糗事百科:   [{}]  \n   点击数：{} \n文章内容\n{}\n\n"""  # 最终输出格式
     tetleContentText = []
     articleContentHtmlText = []
     html = sendHttp(url).replace("<br /><br /><br />", "").replace("<br />", "\n")
@@ -76,8 +76,10 @@ def cat_html(url, page, maxPage):
 
 ## 保存文章
 def save_html(content, title, page):
-    # 文件名称转义 特殊符号
+    # 文件名称转义  emjoy
     title = str(title).replace("", "")
+    # 转义特殊符号
+    title="".join(re.findall('[\u4e00-\u9fa5a-zA-Z0-9]+', title, re.S))
     path = 'E:\\糗百text\\糗事百科第{}页'.format(page)
     if not os.path.exists(path):
         os.mkdir(path)
