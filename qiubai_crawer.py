@@ -13,12 +13,10 @@ import re
 from time import *
 
 
-def crawer_test():
-    url = "http://www.lovehhy.net/Joke/Detail/QSBK/"
-
-
+# 发送http请求
 def sendHttp(url):
-    headers = {"User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:61.0) Gecko/20100101 Firefox/61.0"}
+    headers = {"User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:61.0) Gecko/20100101 Firefox/61.0",
+               "Referer": url}
     r = requests.get(url, headers=headers)  # 增加headers, 模拟浏览器
     return r.text
 
@@ -79,7 +77,7 @@ def save_html(content, title, page):
     # 文件名称转义  emjoy
     title = str(title).replace("", "")
     # 转义特殊符号
-    title="".join(re.findall('[\u4e00-\u9fa5a-zA-Z0-9]+', title, re.S))
+    title = "".join(re.findall('[\u4e00-\u9fa5a-zA-Z0-9]+', title, re.S))
     path = 'E:\\糗百text\\糗事百科第{}页'.format(page)
     if not os.path.exists(path):
         os.mkdir(path)
@@ -105,7 +103,6 @@ if __name__ == '__main__':
         url = "http://www.lovehhy.net/Joke/Detail/QSBK/{}".format(i)
         urlList.append(url)
         cat_html(urlList[i], i + 1, maxPage)
-
 
     end_time = time()
     run_time = end_time - begin_time
