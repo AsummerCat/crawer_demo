@@ -3,7 +3,7 @@
 '''
 conda install -c conda-forge openpyxl
 '''
-
+import os
 import random
 import time
 
@@ -13,14 +13,15 @@ import urllib.parse
 
 
 def get_json(url, page, lang_name, i):
-    index_url = 'https://www.lagou.com/jobs/list_{}?city={}&cl=false&fromSearch=true&labelWords=&suginput='.format(lang_name, urllib.parse.quote(i))
+    index_url = 'https://www.lagou.com/jobs/list_{}?city={}&cl=false&fromSearch=true&labelWords=&suginput='.format(
+        lang_name, urllib.parse.quote(i))
     # 消息头
     headers = {
         'Accept': 'application/json, text/javascript, */*; q=0.01',
-        'Referer': 'https://www.lagou.com/jobs/list_{}?city={}&cl=false&fromSearch=true&labelWords=&suginput='.format(urllib.parse.quote(lang_name), urllib.parse.quote(i)),
+        'Referer': 'https://www.lagou.com/jobs/list_{}?city={}&cl=false&fromSearch=true&labelWords=&suginput='.format(
+            urllib.parse.quote(lang_name), urllib.parse.quote(i)),
         'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/72.0.3626.121 Safari/537.36'
     }
-
 
     data = {'first': 'true', 'pn': str(page), 'kd': lang_name}
     s = requests.Session()
@@ -43,31 +44,39 @@ def get_json(url, page, lang_name, i):
     return info_list  # 返回列表
 
 
-
-
-
 def main():
     lang_name = 'python'
+
+    path = r"E:\拉勾网招聘信息\{}".format(lang_name)
+    if not os.path.exists(path):  # 创建目录文件
+        os.makedirs(path)
+
     wb = Workbook()  # 打开 excel 工作簿
-    for i in ['北京', '上海', '广州', '深圳', '杭州']:  # 五个城市
-        print("开始获取{}的{}岗位".format(i,lang_name))
+    ws1 = wb.active  # 激活
+    ws1.title = lang_name  # 给予文件标题
+
+    for i in ['北京', '上海', '广州', '深圳', '杭州', '厦门']:  # 五个城市
+        print("开始获取{}的{}岗位".format(i, lang_name))
         page = 1
-        ws1 = wb.active
-        ws1.title = lang_name
+        detail_wk = Workbook()  # 打开 excel 工作簿
+        ws2 = detail_wk.active
+        ws2.title = '{}的{}岗位'.format(i, lang_name)
         url = 'https://www.lagou.com/jobs/positionAjax.json?city={}&needAddtionalResult=false'.format(i)
-        while page < 2:  # 每个城市30页信息
-            print("开始获取{}的{}岗位,第{}页".format(i, lang_name,page))
+        maxpage = 31
+        while page < 31:  # 每个城市30页信息
+            print("开始获取{}的{}岗位,第{}/{}页".format(i, lang_name, maxpage - 1))
             info = get_json(url, page, lang_name, i)
             page += 1
             time.sleep(random.randint(10, 20))
             for row in info:
+                ws2.append(row)
                 ws1.append(row)
-        print("结束获取{}的{}岗位".format(i, lang_name))
+        print("输出{}的{}岗位".format(i, lang_name))
+        ws2.save(r'{}\{}的{}岗位信息.xlsx'.format(path, i, lang_name))
+
     print("输出xlsx")
-    wb.save('E:\\{}职位信息.xlsx'.format(lang_name))
+    wb.save(r'{}\{}职位信息.xlsx'.format(path, lang_name))
 
 
 if __name__ == '__main__':
     main()
-
-
