@@ -5,7 +5,14 @@ import time
 import threading
 import re
 from bs4 import BeautifulSoup
+'''
+开启线程获取妹子图数据
+目测3个线程获取数据比较稳定
 
+抓取流程 -> 获取列表页及其最大页数 ->(多线程)获取明细页列表及其最大页数  -> 下载数据(分块下载 stream=True) 
+
+
+'''
 
 # 发送http请求
 def sendHttp(url):
@@ -74,6 +81,7 @@ def get_detail_pic_list(url, title):
         else:
             if pageSize <= dataNum:
                 pageSize = dataNum
+    print("最大页数:"+str(pageSize))
 
     # ## 获取图片地址
     pic_url_list = []
@@ -84,6 +92,7 @@ def get_detail_pic_list(url, title):
     for i in range(2, pageSize + 1):
         next_url = url + "/{}".format(str(i))
         next_link = get_detail_pic(next_url)
+        print("抓取页数:[{}]---->url:[{}]".format(i,next_link))
         pic_url_list.append(next_link)
 
     ## 下载
@@ -111,7 +120,10 @@ def get_detail_pic_url(soup):
 def down_pic(url, title, page):
     # 转义特殊符号
     title = "".join(re.findall('[\u4e00-\u9fa5a-zA-Z0-9]+', title, re.S))
-    path = r'E:\妹子图\{}'.format(title)
+    path ='E:\\妹子图'
+    if not os.path.exists(path):
+        os.mkdir(path)
+    path = 'E:\\妹子图\\{}'.format(title)
     if not os.path.exists(path):
         os.mkdir(path)
     print("开始下载妹子图:{}[第{}页]".format(title, page))
@@ -135,10 +147,25 @@ if __name__ == '__main__':
         url = "http://www.mzitu.com/xinggan/page/{}/".format(i)
         urlList.append(url)
 
+    # 线程数
+    threads = []
     for i, data in enumerate(urlList):
         pic_list = get_pic_list(data)
-        for i in pic_list:
-            get_detail_pic_list(i["link"], i["title"])
-    # end_time = time
-    # run_time = end_time - begin_time
-    # print('该程序运行时间：', run_time)
+        for next_text in pic_list:
+            while len(pic_list) > 0:
+                for thread in threads:
+                    if not thread.is_alive():
+                        threads.remove(thread)
+                while len(threads) < 3 and len(pic_list) > 0:  # 最大线程数设置为 3  测试 3个线程比较稳定
+                    url = pic_list.pop(0)
+                    thread = threading.Thread(target=get_detail_pic_list,
+                                              args=(pic_list[0]["link"], pic_list[0]["title"]))
+                    thread.setName(pic_list[0]["title"] + "---->" + pic_list[0]["link"])
+                    thread.setDaemon(True)
+                    thread.start()
+                    print("开启一个线程----->" + thread.getName())
+                    threads.append(thread)
+
+                    # end_time = time
+                    # run_time = end_time - begin_time
+                    # print('该程序运行时间：', run_time)

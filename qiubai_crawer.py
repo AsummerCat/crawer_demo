@@ -5,6 +5,14 @@
 conda install -c conda-forge beautifulsoup4
 conda install -c conda-forge requests
 '''
+
+
+'''
+简单实现抓取糗百的数据
+
+抓取流程: 获取页最大页数->根据最大页数遍历查询->抓取单页面的 title及其内容保存到列表中->进行渲染成字符串->导出文件
+
+'''
 import os
 
 import requests
