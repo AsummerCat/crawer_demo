@@ -2,6 +2,9 @@
 ## Python爬虫——Python岗位分析报告 导出到xlsx
 '''
 conda install -c conda-forge openpyxl
+
+抓取流程 ->创建相关目录->选取地区遍历抓取数据->根据需要查询的页数 调用lagou网的请求接口(带上session)获取数据->
+遍历需要的数据插入list ->最后利用workbook导出xlsx
 '''
 import os
 import random
