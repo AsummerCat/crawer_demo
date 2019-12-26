@@ -146,7 +146,7 @@ def down_pic(url, title, page):
                     f.write(content)
         time.sleep(2)
     else:
-       print(data_jpg + "已存在")
+        print(data_jpg + "已存在")
 
 
 # 常规抓取
@@ -162,9 +162,10 @@ def default_mian():
 
     # 线程数
     threads = []
-    for data in urlList:
+    for index, data in enumerate(urlList):
         ## 获取单列表的套图
         pic_list = get_pic_list(data)
+        print("当前进度------------------------------------->{}/{}页".format(index, maxPage))
         while len(pic_list) > 0:
             for thread in threads:
                 if not thread.is_alive():
