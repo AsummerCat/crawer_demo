@@ -64,7 +64,7 @@ def main():
         url = 'https://www.lagou.com/jobs/positionAjax.json?city={}&needAddtionalResult=false'.format(i)
         maxpage = 31
         while page < 31:  # 每个城市30页信息
-            print("开始获取{}的{}岗位,第{}/{}页".format(i, lang_name, maxpage - 1))
+            print("开始获取{}的{}岗位,第{}/{}页".format(i, lang_name, page, maxpage - 1))
             info = get_json(url, page, lang_name, i)
             page += 1
             time.sleep(random.randint(10, 20))
