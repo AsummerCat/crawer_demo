@@ -56,8 +56,9 @@ def get_pic_list(url):
         link = linkText.get('href')  # 套图链接
         text = picText.get('alt')  # 套图名字
         data = {"link": link, "title": text}
-        # get_pic(link, text)
         pic_list.append(data)
+    print("获取单页数据完毕 wait3秒")
+    time.sleep(3)
     return pic_list
 
 
@@ -134,7 +135,8 @@ def down_pic(url, title, page):
         with open(r'{}\{}第{}页.jpg'.format(path, title, page), 'ab') as f:
             for data in r.iter_content():
                 f.write(data)
-    time.sleep(1)
+    time.sleep(2)
+
 
 
 if __name__ == '__main__':
@@ -146,7 +148,6 @@ if __name__ == '__main__':
     for i in range(1, maxPage + 1):
         url = "http://www.mzitu.com/xinggan/page/{}/".format(i)
         urlList.append(url)
-
     # 线程数
     threads = []
     for i, data in enumerate(urlList):
@@ -166,6 +167,4 @@ if __name__ == '__main__':
                     print("开启一个线程----->" + thread.getName())
                     threads.append(thread)
 
-                    # end_time = time
-                    # run_time = end_time - begin_time
-                    # print('该程序运行时间：', run_time)
+
