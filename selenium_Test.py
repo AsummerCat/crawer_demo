@@ -10,7 +10,7 @@ from selenium import webdriver
 
 
 def test():
-    driver = webdriver.Chrome()  # 创建一个 Chrome WebDriver 实例
+    driver = webdriver.ie()  # 创建一个 Chrome WebDriver 实例
     driver.get('https://www.baidu.com/')  # 打开网址
 
 if __name__ == '__main__':
